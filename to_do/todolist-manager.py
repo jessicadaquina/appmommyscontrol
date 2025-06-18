@@ -1,6 +1,17 @@
 from flet import *
 import flet as ft
+import mysql.connector
 
+#conexão banco de dados
+conexao = mysql.connector.connect(
+host = 'localhost',
+user = 'root',
+password = '',
+database = 'mommy'
+)
+
+cursor = conexao.cursor()
+   
 class Task(UserControl):
     def __init__(self, task_name, task_status_change, task_delete):
         super().__init__()
@@ -80,6 +91,7 @@ class Task(UserControl):
 class ToDoList(UserControl):    
     def build(self):
         self.new_task = TextField(hint_text="Que tarefa deseja acrescentar?", expand=True)
+
         self.tasks = Column()
         
         self.filter = Tabs(
