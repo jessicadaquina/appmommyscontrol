@@ -1,14 +1,19 @@
 from flet import *
 import flet as ft
 import flet_material as fm
+import flet as value
 import asyncio
+from auth import register_user, login_user
+# from cadastrousuario import *
 
+# definido cor padrão de plano de fundo do aplicativo
 PRIMARY = "white"
-
 fm.Theme.set_theme(theme=PRIMARY)
 
+#definindo usuário e senha para administrador
 dummy_user_list: list = [["jessica.tomino@gmail.com", 123456]]
 
+# configurando tela do aplicativo com medidas, cores, sombras
 class CustomInputfiel(UserControl):
     def __init__(self, password: bool, title: str):
         self.input: Control = TextField(
@@ -117,10 +122,13 @@ class CustomInputfiel(UserControl):
     def build(self):
         return self.object
 
+# configuração espaços de usuário e senha com visualizador de senha
 class MainFormUI(UserControl):
     def __init__ (self):
-        self.email = CustomInputfiel(False, "Email")
-        self.password = CustomInputfiel(True, "Senha")
+        # self.email = CustomInputfiel(False, "Email")
+        self.email = TextField(label="Email")
+        # self.password = CustomInputfiel(True, "Senha")
+        self.password = TextField(label="Senha", password=True, can_reveal_password=True)
         self.ImagemLogin: Control = Image(
             src="tela/9480567.jpg",
             width=180,
@@ -137,7 +145,7 @@ class MainFormUI(UserControl):
             width=450, height=550,
             bgcolor=colors.with_opacity(0.01, "white"),
             border_radius=10,
-            padding=40,
+            padding=0,
             content= Column(
                 horizontal_alignment="center",
                 alignment="center",
@@ -163,9 +171,12 @@ class MainFormUI(UserControl):
                 ]
             )
         )
-        
+
+# configuração botões de enviar usuario e senha e de cadastrar novo usuário        
 class SignInButton(UserControl):
    def __init__(self, btn_name):
+       self.password = CustomInputfiel(True, "Senha")
+       self.email = CustomInputfiel(False, "Email")
        self.btn_name = btn_name
        super().__init__()
        
@@ -190,7 +201,7 @@ class SignInButton(UserControl):
         )
         
    async def validade_entries(self, e):
-        password_value = self.password.inout.value()
+        password_value = self.password.input.value
         email_value = self.email.input.value
         
         for user, password in dummy_user_list:
@@ -226,8 +237,11 @@ class RegisterInButton(UserControl):
        )
    
     
-        
-def main(page: Page):
+# Juntando configurações de usuário e senha com funções de entrar e cadastrar        
+def tela_login(page: Page):
+    page.title = "MOMMY'S CONTROL"
+    page.padding = 0
+    page.spacing = 0
     page.horizontal_alignment = CrossAxisAlignment.CENTER
     page.vertical_alignment = MainAxisAlignment.CENTER
     page.bgcolor = fm.Theme.primary_theme
@@ -238,10 +252,13 @@ def main(page: Page):
         form,
         Divider(height=5, color='transparent'),
         SignInButton("Entrar"),
-        Divider(height=2, color='transparent'),
-        RegisterInButton("Cadastrar")
+        Divider(height=10, color='transparent'),
+        # ElevatedButton("Cadastrar", on_click="tela/cadastrousuario.py")
+#        RegisterInButton("Cadastrar",
+ #                        on_click = ("tela/cadastrousuario.py")
+  #                      )
     )
     page.update()
     
 if __name__ == '__main__':
-    ft.app(target=main)
+    app(target=tela_login)
